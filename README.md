@@ -62,6 +62,7 @@ local enable_penalty = false
 
 
 About this mod:
+===
 This mod was taken from the Japanese CDDA Wiki and redistributed with permission, as granted within the original readme.
 The original author was not named in the modinfo file, and may have opted to post anonymously. If this is in error, please send correction.
 Translation and conversion provided by TGWeaver.
