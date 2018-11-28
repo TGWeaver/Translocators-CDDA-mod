@@ -11,12 +11,11 @@ To get started with creating translocators, you will need Electronics skill at 7
 
 How To:
 ===
-The translocator is built with what is functionally an lifetime atomic energy supply, but converts power slowly, at a rate of roughly 1 charge per hour, with a maximum storage of 24 charges.
+The translocator is built with what is functionally an lifetime atomic energy supply, but converts power slowly, at a rate of roughly 1 charge per hour, with a maximum storage of 24 charges. With the right components, you can upgrade to the Translocator Mk.II, which can store 36 charges.
 
 The translocator has several options:
 1. Warp to registered destination
-  This begins the teleportation sequence and will consume 6 power to transport the player. You can teleport to a location that does not have a corresponding warpgate, but it will consume 12 power instead (and you'll have to find a way to get back manually).
-  *If you warp to a registered location while standing on a warpgate, power cost will be reduced from 12 to 6 -- the same as it costs to return to a linked warpgate. Further, the odds of accident will be greatly reduced. In this sense, more than one warpgate may be beneficial to build, however the cost would such a goal potentially prohibitive.
+  This begins the teleportation sequence and will consume 12 power to transport the player. If you choose to teleport to a linked warpgate, OR while standing on any active warpgate, the cost will be reduced to 6.
 
 2. Register warp destination
   Registers a location as a destination for future teleports. Up to 4 destinations can be registered at a time. Doesn't consume charge.
