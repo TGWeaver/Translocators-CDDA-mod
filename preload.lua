@@ -30,7 +30,7 @@ function iuse_trs_loose_teleport(item, active)
 
 	message("The world turns around you, and a new location comes careening into focus.")
 
-	if game.one_in(5) and enable_penalty then
+	if game.one_in(3) and enable_penalty then
 		apply_penalty(item)
 	end
 end
