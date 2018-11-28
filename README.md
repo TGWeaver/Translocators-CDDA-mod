@@ -1,4 +1,4 @@
-#Translocators
+Translocators
 ===
 
 This mod allows instantaneous long-range travel at a high price. It requires lots of setup and only works on the player character.
@@ -9,7 +9,7 @@ Always save and backup your worlds before adding any mods, LUA or otherwise, and
 To get started with creating translocators, you will need Electronics skill at 7 and 8 for certain recipes, as well as rare items to create the necessary structures.
 
 
-#How To:
+How To:
 ===
 The translocator is built with what is functionally an lifetime atomic energy supply, but converts power slowly, at a rate of roughly 1 charge per hour, with a maximum storage of 24 charges.
 
@@ -31,7 +31,7 @@ The translocator has several options:
   At the cost of a full charge of 24 power, you can forego teleporting to a registered location and manually choose a map tile as your destination, warping there instantly. However, this process is imprecise and extremely dangerous. Teleporting inside a solid object or a living creature could be fatal, and additionally, the likelihood of accident and negative warping side effects are doubled.
   
   
-#Warpgate
+Warpgate
 ===
 Warpgates are expensive to build, but for repeat visits, may be worth constructing.
 Stand here when using the translocator and you can link the warpgate. This will avoid occupying one of the four standard transfer slots, and jumps here will take only half power. Jumping to warpgates will also completely remove the chance of negative warping side effects and accidents (see below).
@@ -45,7 +45,7 @@ Warpgates are built via the construction menu (*) and are built in two stages:
    There are two methods for opening the gate, but the result is the same. 
   
   
-#Dangers of Warping
+Dangers of Warping
 ===
 When you warp, there is always a possibility of danger. This is much higher than normal when performing a Blind Leap, and much lower than normal if warping to a constructed warpgate.
 When things DO go wrong, there are several possible consequences to unsafe warping:
