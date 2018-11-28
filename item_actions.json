@@ -1,0 +1,27 @@
+[
+    {
+        "type" : "item_action",
+        "id" : "IUSE_TRS_A_TRANSLOCATOR",
+        "name" : "Warp to registered destination"
+    },
+    {
+        "type" : "item_action",
+        "id" : "IUSE_TRS_B_REGIST",
+        "name" : "Register warp destination"
+    },
+    {
+        "type" : "item_action",
+        "id" : "IUSE_TRS_C_DELETE",
+        "name" : "Delete warp destination"
+    },
+    {
+        "type" : "item_action",
+        "id" : "IUSE_TRS_D_LINK",
+        "name" : "Link with warpgate"
+    },
+    {
+        "type" : "item_action",
+        "id" : "IUSE_TRS_E_LOOSE_TELEPORT",
+        "name" : "Blind Leap"
+    }
+]

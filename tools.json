@@ -1,0 +1,42 @@
+[
+  {
+    "id": "TRS_translocator",
+    "type": "TOOL",
+    "symbol": "g",
+    "color": "red",
+    "looks_like": "teleporter",
+    "name": "translocator",
+    "description": "An incredibly specialized and powerful handheld device that will teleport the user and anything on their person to a registered destination or gate. Blind teleports to destinations not registered are possible, but carry immense risk. Internal power recharges automatically at a rate of 1 per hour, to a max of 24.",
+    "price": 1000,
+    "material": [ "aluminum", "plastic" ],
+    "weight": 450,
+    "volume": 1,
+    "max_charges": 24,
+    "initial_charges": 0,
+    "flags": [ "NO_UNLOAD" ],
+    "use_action": [ "IUSE_TRS_A_TRANSLOCATOR", "IUSE_TRS_B_REGIST", "IUSE_TRS_C_DELETE", "IUSE_TRS_D_LINK", "IUSE_TRS_E_LOOSE_TELEPORT" ],
+    "artifact_data": {
+      "charge_type": "ARTC_TIME"
+    }
+  },
+  {
+    "id": "TRS_translocator2",
+    "type": "TOOL",
+    "symbol": "g",
+    "color": "red",
+    "looks_like": "teleporter",
+    "name": "translocator mk. II",
+    "description": "An incredibly specialized and powerful handheld device that will teleport the user and anything on their person to a registered destination or gate. Blind teleports to destinations not registered are possible, but carry immense risk. Internal power recharges automatically at a rate of 1 per hour, to a max of 36.",
+    "price": 1000,
+    "material": [ "aluminum", "plastic" ],
+    "weight": 450,
+    "volume": 1,
+    "max_charges": 36,
+    "initial_charges": 12,
+    "flags": [ "NO_UNLOAD" ],
+    "use_action": [ "IUSE_TRS_A_TRANSLOCATOR", "IUSE_TRS_B_REGIST", "IUSE_TRS_C_DELETE", "IUSE_TRS_D_LINK", "IUSE_TRS_E_LOOSE_TELEPORT" ],
+    "artifact_data": {
+      "charge_type": "ARTC_TIME"
+    }
+  }
+]

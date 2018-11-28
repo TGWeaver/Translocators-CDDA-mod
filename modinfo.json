@@ -1,0 +1,12 @@
+[
+  {
+     "type"        : "MOD_INFO"
+    ,"ident"       : "translocator"
+    ,"name"        : "Long Distance Translocators"
+    ,"authors"     : ["Unknown"]
+    ,"maintainers": [ "TGWeaver" ]
+    ,"description" : "Provides the ability to enable long-distance teleportation."
+    ,"category"    : "items"
+    ,"dependencies": ["dda"]
+  }
+]

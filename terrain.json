@@ -1,0 +1,24 @@
+[
+  {
+    "type": "terrain",
+    "id": "t_TRS_portal_base",
+    "name": "Warpgate Base",
+    "description": "The wired foundation for a translocational warpgate. Not completed yet, and thus not useful in its current dormant state.",
+    "symbol": "#",
+    "color": "brown",
+    "move_cost": 3,
+    "flags": [ "TRANSPARENT", "NOITEM", "INDOORS" ],
+    "bash": { "sound": "thump", "ter_set": "t_null", "str_min": 50, "str_max": 100, "str_min_supported": 100, "bash_below": true }
+  },
+  {
+    "type": "terrain",
+    "id": "t_TRS_stabilized_portal",
+    "name": "Warpgate",
+    "description": "This specialized gate acts as an exit destination for translocators, but must be linked to the specific device first.",
+    "symbol": "0",
+    "color": "blue",
+    "move_cost": 3,
+    "flags": [ "TRANSPARENT", "NOITEM", "INDOORS" ],
+    "bash": { "sound": "thump", "ter_set": "t_null", "str_min": 50, "str_max": 100, "str_min_supported": 100, "bash_below": true }
+  }
+]

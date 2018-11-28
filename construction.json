@@ -1,0 +1,66 @@
+[
+  {
+    "type": "construction",
+    "description": "Warpgate Base",
+    "category": "CONSTRUCT",
+    "required_skills" : [ [ "fabrication", 6 ], [ "electronics", 7 ] ],
+    "time": 150,
+    "tools": [
+      [ [ "con_mix", 50 ] ],
+      [ [ "oxy_torch", 10 ], [ "welder", 50 ], [ "welder_crude", 75 ], [ "toolset", 75 ] ]
+    ],
+    "qualities": [
+      [ { "id": "GLARE", "level": 2} ],
+      [ { "id": "SMOOTH", "level": 2 } ]
+    ],
+    "components" : [
+      [ [ "rebar", 16 ] ],
+      [ [ "concrete", 6] ],
+      [ [ "water", 4 ], [ "water_clean", 4 ] ],
+      [ [ "minireactor", 2 ] ],
+      [ [ "alloy_sheet", 4 ], [ "alloy_plate", 1 ] ],
+      [ [ "sheet_metal", 8 ] ]
+    ],
+    "pre_special" : "check_empty",
+    "post_terrain": "t_TRS_portal_base"
+  },{
+    "type": "construction",
+    "description": "Open Warpgate (w/portal generator)",
+    "category": "CONSTRUCT",
+    "required_skills" : [ [ "fabrication", 7 ], [ "electronics", 8 ] ],
+    "time": 150,
+    "tools": [
+      [ [ "oxy_torch", 10 ], [ "welder", 50 ], [ "welder_crude", 75 ], [ "toolset", 75 ] ]
+    ],
+    "qualities": [
+      [ { "id": "GLARE", "level": 2} ]
+    ],
+    "components" : [
+      [ [ "portal", 1 ] ],
+      [ [ "plut_cell", 16] ]
+    ],
+    "pre_terrain" : "t_TRS_portal_base",
+    "post_terrain": "t_TRS_stabilized_portal"
+  },{
+    "type": "construction",
+    "description": "Open Warpgate (w/teleporter)",
+    "category": "CONSTRUCT",
+    "required_skills" : [ [ "fabrication", 7 ], [ "electronics", 8 ] ],
+    "time": 150,
+    "tools": [
+      [ [ "oxy_torch", 10 ], [ "welder", 50 ], [ "welder_crude", 75 ], [ "toolset", 75 ] ]
+    ],
+    "qualities": [
+      [ { "id": "GLARE", "level": 2} ]
+    ],
+    "components" : [
+      [ [ "teleporter", 1 ], [ "bio_teleport", 1 ] ],
+      [ [ "teleporter", 1 ], [ "bio_teleport", 1 ] ],
+      [ [ "teleporter", 1 ], [ "bio_teleport", 1 ] ],
+      [ [ "teleporter", 1 ], [ "bio_teleport", 1 ] ],
+      [ [ "plut_cell", 16] ]
+    ],
+    "pre_terrain" : "t_TRS_portal_base",
+    "post_terrain": "t_TRS_stabilized_portal"
+  }
+]
