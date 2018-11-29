@@ -20,6 +20,10 @@ function standing_on_warpgate()
 	return (ter_str_id == ter_warpgate_id)
 end
 
+function has_saves(item)
+	return item:has_var("slot1_name") or item:has_var("slot2_name") or item:has_var("slot3_name") or item:has_var("slot4_name")
+end
+
 function iuse_trs_loose_teleport(item, active)
 	if requires_charges and item.charges < req_power_blind_leap then
 		message("Insufficient charge. Blind Leaps require a charge of %d.", req_power_blind_leap)
@@ -31,7 +35,7 @@ function iuse_trs_loose_teleport(item, active)
 		return
 	end
 	
-	local target = game.omap_choose_point( player:global_omt_location() )
+	local target = game.omap_choose_point(player:global_omt_location())
 	
 	if requires_charges then
 		item.charges = item.charges - req_power_blind_leap
@@ -80,10 +84,9 @@ function iuse_trs_link(item, active)
 end
 
 function iuse_trs_delete(item, active)
-	local save_count = item:get_var("save_count", 0)
-	if save_count == 0 then
+	if not has_saves(item) then
 		message("This device does not have any registered destinations.")
-		return 0
+		return
 	end
 	
 	local slot1 = item:get_var("slot1_name", "Slot 1: Not registered")
@@ -107,7 +110,7 @@ function iuse_trs_delete(item, active)
 		return
 	end
 	
-	local slot_id = "slot".. tostring( math.floor( menu.selected + 1 ) ).."_name"
+	local slot_id = "slot"..tostring(math.floor(menu.selected + 1)).."_name"
 	local is_registered = item:has_var(slot_id)
 
 	if not is_registered then
@@ -120,10 +123,9 @@ function iuse_trs_delete(item, active)
 		message("No registered locations were deleted.")
 		return
 	end
-	
-	item:set_var("save_count", math.floor( save_count - 1 ) )
+
 	item:erase_var(slot_id)
-	
+
 	message("The registration of %q was removed.", slot_name)
 end
 
@@ -149,8 +151,8 @@ function iuse_trs_regist(item, active)
 		return
 	end
 	
-	local slot_num = math.floor( menu.selected + 1 )
-	local slot_id = "slot"..tostring( slot_num )
+	local slot_num = math.floor(menu.selected + 1)
+	local slot_id = "slot"..tostring(slot_num)
 	
 	local is_saved = item:has_var(slot_id.."_name")
 	if is_saved then
@@ -175,9 +177,6 @@ function iuse_trs_regist(item, active)
 	local om = player:global_omt_location()
 	local gpos = player:global_square_location()
 	
-	local save_count = item:get_var("save_count", 0)
-	item:set_var("save_count", math.floor( save_count + 1 ))
-	
 	item:set_var(slot_id.."_name", slot_name)
 	item:set_var(slot_id.."_omx", tostring(om.x))
 	item:set_var(slot_id.."_omy", tostring(om.y))
@@ -194,10 +193,9 @@ function iuse_trs_translocator(item, active)
 		message("Insufficient charge. Teleportation requires at least %d power.", req_power_gate)
 		return
 	end
-    
-	local save_count = item:get_var("save_count", 0)
+
 	local is_linked = item:has_var("gate_name")
-	if save_count == 0 and not is_linked then
+	if not has_saves(item) and not is_linked then
 		message("There are no valid registered destinations.")
 		return
 	end
@@ -245,7 +243,7 @@ function iuse_trs_translocator(item, active)
 	if choice == 0 then
 		slot_id = "gate"
 	else
-		slot_id = "slot"..tostring( math.floor( choice ) )
+		slot_id = "slot"..tostring(math.floor(choice))
 	end
 	
 	if not item:has_var(slot_id.."_name") then
@@ -277,10 +275,12 @@ function iuse_trs_translocator(item, active)
 
 	message("The fabric of the world shifts like loose cloth, and when it gradually returns to focus, you're somewhere else.")
 	
-	if choice == 0 or on_warpgate then
-		item.charges = item.charges - req_power_gate
-	else
-        item.charges = item.charges - req_power_location
+	if requires_charges then
+		if choice == 0 or on_warpgate then
+			item.charges = item.charges - req_power_gate
+		else
+			item.charges = item.charges - req_power_location
+		end
 	end
 	
 	if enable_penalty and game.one_in(10) then
