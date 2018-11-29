@@ -85,14 +85,13 @@ function iuse_trs_delete(item, active)
 		message("This device does not have any registered destinations.")
 		return 0
 	end
-
-	local menu = game.create_uimenu()
 	
 	local slot1 = item:get_var("slot1_name", "Slot 1: Not registered")
 	local slot2 = item:get_var("slot2_name", "Slot 2: Not Registered")
 	local slot3 = item:get_var("slot3_name", "Slot 3: Not Registered")
 	local slot4 = item:get_var("slot4_name", "Slot 4: Not Registered")
 	
+	local menu = game.create_uimenu()
 	menu.title = "Delete which registered location?"
 	menu:addentry(slot1)
 	menu:addentry(slot2)
@@ -116,27 +115,25 @@ function iuse_trs_delete(item, active)
 		return
 	end
 	
-	local slot_name = item:get_var(slot_id, "null")
+	local slot_name = item:get_var(slot_id)
 	if not game.query_yn(string.format("Are you sure you want to unregister the link to %s?", slot_name)) then
 		message("No registered locations were deleted.")
 		return
 	end
 	
-	save_count = math.floor( save_count - 1 )
-	item:set_var("save_count", save_count)
+	item:set_var("save_count", math.floor( save_count - 1 ) )
 	item:erase_var(slot_id)
 	
 	message("The registration of %q was removed.", slot_name)
 end
 
 function iuse_trs_regist(item, active)
-	local menu = game.create_uimenu()
-	
 	local slot1 = item:get_var("slot1_name", "Slot 1: Not Registered")
 	local slot2 = item:get_var("slot2_name", "Slot 2: Not Registered")
 	local slot3 = item:get_var("slot3_name", "Slot 3: Not Registered")
 	local slot4 = item:get_var("slot4_name", "Slot 4: Not Registered")
 	
+	local menu = game.create_uimenu()
 	menu.title = "Register this location to which slot?"
 	menu:addentry(slot1)
 	menu:addentry(slot2)
@@ -157,7 +154,7 @@ function iuse_trs_regist(item, active)
 	
 	local is_saved = item:has_var(slot_id.."_name")
 	if is_saved then
-		local save_name = item:get_var(slot_id.."_name", "null")
+		local save_name = item:get_var(slot_id.."_name")
 		if not game.query_yn(string.format("There is already a registered location in this slot, with the name %s. Delete it?", save_name)) then
 			message("No location was registered.")
 			return
@@ -210,7 +207,6 @@ function iuse_trs_translocator(item, active)
 		message("<color_light_green>You are standing in an active warpgate. Outgoing teleportation energy cost to registered locations will be halved, and chance of accident will be reduced.</color>")
 	end
 
-	local menu = game.create_uimenu()
 	local gate_link	
 	local slot1 = item:get_var("slot1_name", "Slot 1: Not Registered")
 	local slot2 = item:get_var("slot2_name", "Slot 2: Not Registered")
@@ -223,8 +219,8 @@ function iuse_trs_translocator(item, active)
 		gate_link = "No Warpgate Registered"
 	end
 	
+	local menu = game.create_uimenu()
 	menu.title = "Where do you want to teleport?"
-	
 	menu:addentry(gate_link)
 	menu:addentry(slot1)
 	menu:addentry(slot2)
