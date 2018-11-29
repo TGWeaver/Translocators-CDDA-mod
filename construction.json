@@ -1,7 +1,7 @@
 [
   {
     "type": "construction",
-    "description": "Warpgate Base",
+    "description": "Construct Warpgate Base",
     "category": "CONSTRUCT",
     "required_skills" : [ [ "fabrication", 6 ], [ "electronics", 7 ] ],
     "time": 150,
