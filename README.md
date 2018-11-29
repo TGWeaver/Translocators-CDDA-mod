@@ -9,7 +9,7 @@ Always save and backup your worlds before adding any mods, LUA or otherwise, and
 To get started with creating translocators, you will need Electronics skill at 7 and 8 for certain recipes, as well as rare items to create the necessary structures.
 
 
-How To:
+How To Use:
 ===
 The translocator is built with what is functionally an lifetime atomic energy supply, but converts power slowly, at a rate of roughly 1 charge per hour, with a maximum storage of 24 charges. With the right components, you can upgrade to the Translocator Mk.II, which can store 36 charges.
 
@@ -54,10 +54,18 @@ When things DO go wrong, there are several possible consequences to unsafe warpi
 *Damage to translocator: In very rare cases, the translocator itself will be damaged and lose all registered destinations, making it potentially quite difficult to get home. However, even when this happens, warpgate destinations WILL NOT BE LOST, so you will always be able to return to a registered warpgate reliably, even when things go wrong. (Assuming you are alive.)
 *When performing a Blind Leap, the possibility exists of teleporting directly into a wall, mass of stone, etc. A "telefrag" like this can be fatal. Use Blind Leaps only with extreme caution and under special circumstances.
 
-You can remove these dangers (except telefragging) by opening the file "preload.lua" in this folder and changing the very first line from:
-local enable_penalty = true
-To:
-local enable_penalty = false
+
+Customizing
+===
+This mod allows for several options to be customized by the user. Open preload.lua in the mod folder and you can find the following options at the start of the file, set to their default values, which you can change at will:
+* local enable_penalty = true : Whether or not accidents can happen when warping. Set to false to remove negative warping penalties.
+* local requires_charges = true : Whether teleporting costs power. Set to false to make all teleporting free.
+* local ter_warpgate_id = "t_TRS_stabilized_portal" : The ID of the tile used as a warpgate. By default, this is set to a new and expensive construction added by this mod. If you know the ID of another terrain tile, you could use that here instead. For example, you could make beds function as warpgates.
+* local req_power_gate = 6 : Cost of teleporting to or from a warpgate.
+* local req_power_location = 12 : Cost of teleporting to a non-warpgate location when not standing on a warpgate.
+* local req_power_blind_leap = 24 : Cost of making a Blind Leap to an unregistered location.
+
+When changing costs, keep in mind the default translocator holds a max of 24 charges, and the MkII a max of 36, with both regaining 1 charge per hour.
 
 
 About this mod:
@@ -65,3 +73,4 @@ About this mod:
 This mod was taken from the Japanese CDDA Wiki and redistributed with permission, as granted within the original readme.
 The original author was not named in the modinfo file, and may have opted to post anonymously. If this is in error, please send correction.
 Translation and conversion provided by TGWeaver.
+Special thanks to Dutchs for streamlining, cleaning, and more!
