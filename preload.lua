@@ -111,7 +111,7 @@ function iuse_trs_delete(item, active)
 	local is_registered = item:has_var(slot_id)
 
 	if not is_registered then
-		message("The selected transfer location does not exist")
+		message("The selected transfer location does not exist.")
 		return
 	end
 	
