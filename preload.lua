@@ -1,4 +1,9 @@
 local enable_penalty = true
+local requires_charges = true
+local ter_warpgate_id = "t_TRS_stabilized_portal"
+local req_power_gate = 6
+local req_power_location = 12
+local req_power_blind_leap = 24
 
 function message(...)
 	local s = string.format(...)
@@ -9,20 +14,28 @@ function tri_delta(a, b)
 	return tripoint(a.x - b.x, a.y - b.y, a.z - b.z)
 end
 
+function standing_on_warpgate()
+	local ter_int_id = map:ter(player:pos()):to_i()
+	local ter_str_id = game.get_terrain_type(ter_int_id).id:str()
+	return (ter_str_id == ter_warpgate_id)
+end
+
 function iuse_trs_loose_teleport(item, active)
-	if item.charges < 24 then
-		message("Insufficient charge. Blind Leaps require a full charge of 24.")
+	if requires_charges and item.charges < req_power_blind_leap then
+		message("Insufficient charge. Blind Leaps require a charge of %d.", req_power_blind_leap)
 		return
 	end
 	
-	if not game.query_yn("<color_red>This function does not guarantee a safe landing. \n Is that all right?</color>") then
+	if not game.query_yn("<color_red>This function does not guarantee a safe landing.\nIs that all right?</color>") then
 		message("Teleport canceled.")
 		return
 	end
 	
 	local target = game.omap_choose_point( player:global_omt_location() )
 	
-    item.charges = item.charges - 24
+	if requires_charges then
+		item.charges = item.charges - req_power_blind_leap
+    end
     
 	g:place_player_overmap(target)
 
@@ -30,24 +43,23 @@ function iuse_trs_loose_teleport(item, active)
 
 	message("The world turns around you, and a new location comes careening into focus.")
 
-	if game.one_in(3) and enable_penalty then
+	if enable_penalty and game.one_in(3) then
 		apply_penalty(item)
 	end
 end
 
 function iuse_trs_link(item, active)
-	local ter_int_id = map:ter(player:pos()):to_i()
-	local ter_str_id = game.get_terrain_type(ter_int_id).id:str()
+	local on_warpgate = standing_on_warpgate();
 	
-	if ter_str_id ~= "t_TRS_stabilized_portal" then
+	if not on_warpgate then
 		message("Couldn't find valid warpgate. Please use this item only while standing on a fully activate warpgate.")
 		return
 	end
 	
-	local linked = item:get_var("gate_name", "null")
+	local is_linked = item:has_var("gate_name")
 	
-	if linked ~= "null" then
-		if not game.query_yn("A gate link has already been established. \n Are you sure you want to override the current link?") then
+	if is_linked then
+		if not game.query_yn("A gate link has already been established.\nAre you sure you want to override the current link?") then
 			message("A gate link was not established.")
 			return
 		end
@@ -68,7 +80,7 @@ function iuse_trs_link(item, active)
 end
 
 function iuse_trs_delete(item, active)
-	local save_count = tonumber( item:get_var("save_count", "0") )
+	local save_count = item:get_var("save_count", 0)
 	if save_count == 0 then
 		message("This device does not have any registered destinations.")
 		return 0
@@ -76,26 +88,10 @@ function iuse_trs_delete(item, active)
 
 	local menu = game.create_uimenu()
 	
-	local slot1 = item:get_var("slot1_name", "null")
-	local slot2 = item:get_var("slot2_name", "null")
-	local slot3 = item:get_var("slot3_name", "null")
-	local slot4 = item:get_var("slot4_name", "null")
-	
-	if slot1 == "null" then
-		slot1 = "Slot 1: Not registered"
-	end
-
-	if slot2 == "null" then
-		slot2 = "Slot 2: Not Registered"
-	end
-
-	if slot3 == "null" then
-		slot3 = "Slot 3: Not Registered"
-	end
-
-	if slot4 == "null" then
-		slot4 = "Slot 4: Not Registered"
-	end
+	local slot1 = item:get_var("slot1_name", "Slot 1: Not registered")
+	local slot2 = item:get_var("slot2_name", "Slot 2: Not Registered")
+	local slot3 = item:get_var("slot3_name", "Slot 3: Not Registered")
+	local slot4 = item:get_var("slot4_name", "Slot 4: Not Registered")
 	
 	menu.title = "Delete which registered location?"
 	menu:addentry(slot1)
@@ -112,51 +108,36 @@ function iuse_trs_delete(item, active)
 		return
 	end
 	
-	local slot_id = "slot".. tostring( math.floor( menu.selected + 1 ) )
-	local select_name = item:get_var(slot_id.."_name", "null")
+	local slot_id = "slot".. tostring( math.floor( menu.selected + 1 ) ).."_name"
+	local is_registered = item:has_var(slot_id)
 
-	if select_name == "null" then
-		message("The selected transfer location is unregistered.")
+	if not is_registered then
+		message("The selected transfer location does not exist")
 		return
 	end
 	
-	if not game.query_yn(string.format("Are you sure you want to unregister the link to %s?", select_name)) then
+	local slot_name = item:get_var(slot_id, "null")
+	if not game.query_yn(string.format("Are you sure you want to unregister the link to %s?", slot_name)) then
 		message("No registered locations were deleted.")
 		return
 	end
 	
 	save_count = math.floor( save_count - 1 )
-	item:set_var("save_count", tostring(save_count))
-	item:set_var(slot_id.."_name", "null")
+	item:set_var("save_count", save_count)
+	item:erase_var(slot_id)
 	
-	message("The registration of %q was canceled.", select_name)
+	message("The registration of %q was removed.", slot_name)
 end
 
 function iuse_trs_regist(item, active)
 	local menu = game.create_uimenu()
 	
-	local slot1 = item:get_var("slot1_name", "null")
-	local slot2 = item:get_var("slot2_name", "null")
-	local slot3 = item:get_var("slot3_name", "null")
-	local slot4 = item:get_var("slot4_name", "null")
+	local slot1 = item:get_var("slot1_name", "Slot 1: Not Registered")
+	local slot2 = item:get_var("slot2_name", "Slot 2: Not Registered")
+	local slot3 = item:get_var("slot3_name", "Slot 3: Not Registered")
+	local slot4 = item:get_var("slot4_name", "Slot 4: Not Registered")
 	
 	menu.title = "Register this location to which slot?"
-	if slot1 == "null" then
-		slot1 = "Slot 1: Not Registered"
-	end
-
-	if slot2 == "null" then
-		slot2 = "Slot 2: Not Registered"
-	end
-
-	if slot3 == "null" then
-		slot3 = "Slot 3: Not Registered"
-	end
-
-	if slot4 == "null" then
-		slot4 = "Slot 4: Not Registered"
-	end
-	
 	menu:addentry(slot1)
 	menu:addentry(slot2)
 	menu:addentry(slot3)
@@ -174,32 +155,31 @@ function iuse_trs_regist(item, active)
 	local slot_num = math.floor( menu.selected + 1 )
 	local slot_id = "slot"..tostring( slot_num )
 	
-	local saved = item:get_var(slot_id.."_name", "null")
-	
-	if saved ~= "null" then
-		if not game.query_yn(string.format("There is already a registered location in this slot, with the name %s. Delete it?", saved)) then
+	local is_saved = item:has_var(slot_id.."_name")
+	if is_saved then
+		local save_name = item:get_var(slot_id.."_name", "null")
+		if not game.query_yn(string.format("There is already a registered location in this slot, with the name %s. Delete it?", save_name)) then
 			message("No location was registered.")
 			return
 		end
 	end
 	
-	local slot_name = ""
-	local flg = true
+	local slot_name
+	local ask_for_name = true
 	
-	while flg do
+	while ask_for_name do
 		slot_name = game.string_input_popup("Enter a name for this destination.", 16, "Names can be up to 16 standard characters.")
 		
-		if slot_name ~= "" and slot_name ~= "null" then
-			flg = false
+		if slot_name ~= "" then
+			ask_for_name = false
 		end
 	end
 	
 	local om = player:global_omt_location()
 	local gpos = player:global_square_location()
 	
-	local save_count = tonumber( item:get_var("save_count", "0") )
-	save_count = math.floor( save_count + 1 )
-	item:set_var("save_count", tostring(save_count))
+	local save_count = item:get_var("save_count", 0)
+	item:set_var("save_count", math.floor( save_count + 1 ))
 	
 	item:set_var(slot_id.."_name", slot_name)
 	item:set_var(slot_id.."_omx", tostring(om.x))
@@ -213,57 +193,37 @@ function iuse_trs_regist(item, active)
 end
 
 function iuse_trs_translocator(item, active)
-
-	local ter_int_id = map:ter(player:pos()):to_i()
-	local ter_str_id = game.get_terrain_type(ter_int_id).id:str()
-
-	if item.charges < 6 then
-		message("Insufficient charge. Teleportation requires at least 6 power.")
+	if requires_charges and item.charges < req_power_gate then
+		message("Insufficient charge. Teleportation requires at least %d power.", req_power_gate)
 		return
 	end
     
-	if ter_str_id == "t_TRS_stabilized_portal" then
-		message("<color_light_green>You are standing in an active warpgate. Outgoing teleportation energy cost to registered locations will be halved, and chance of accident will be reduced.</color>")
+	local save_count = item:get_var("save_count", 0)
+	local is_linked = item:has_var("gate_name")
+	if save_count == 0 and not is_linked then
+		message("There are no valid registered destinations.")
+		return
 	end
 	
-	local save_count = tonumber( item:get_var("save_count", "0") )
-	local linked = item:get_var("gate_name", "null")
-	if save_count == 0 and linked == "null" then
-		message("There are no valid registered destinations.")
-		return 0
+	local on_warpgate = standing_on_warpgate()
+	if on_warpgate then
+		message("<color_light_green>You are standing in an active warpgate. Outgoing teleportation energy cost to registered locations will be halved, and chance of accident will be reduced.</color>")
 	end
 
 	local menu = game.create_uimenu()
+	local gate_link	
+	local slot1 = item:get_var("slot1_name", "Slot 1: Not Registered")
+	local slot2 = item:get_var("slot2_name", "Slot 2: Not Registered")
+	local slot3 = item:get_var("slot3_name", "Slot 3: Not Registered")
+	local slot4 = item:get_var("slot4_name", "Slot 4: Not Registered")
 	
-	local gate_link = item:get_var("gate_name", "null")
-	local slot1 = item:get_var("slot1_name", "null")
-	local slot2 = item:get_var("slot2_name", "null")
-	local slot3 = item:get_var("slot3_name", "null")
-	local slot4 = item:get_var("slot4_name", "null")
+	if is_linked then
+		gate_link = "Linked Warpgate"
+	else
+		gate_link = "No Warpgate Registered"
+	end
 	
 	menu.title = "Where do you want to teleport?"
-	
-	if gate_link == "null" then
-		gate_link = "No Warpgate Registered"
-	else
-		gate_link = "Linked Warpgate"
-	end
-	
-	if slot1 == "null" then
-		slot1 = "Slot 1: Not Registered"
-	end
-
-	if slot2 == "null" then
-		slot2 = "Slot 2: Not Registered"
-	end
-
-	if slot3 == "null" then
-		slot3 = "Slot 3: Not Registered"
-	end
-
-	if slot4 == "null" then
-		slot4 = "Slot 4: Not Registered"
-	end
 	
 	menu:addentry(gate_link)
 	menu:addentry(slot1)
@@ -280,21 +240,20 @@ function iuse_trs_translocator(item, active)
 		return
 	end
 	
-	if choice ~= 0 and item.charges < 12 and ter_str_id ~= "t_TRS_stabilized_portal" then
-		message("Insufficient charge. Teleportation to a memorized non-warpgate destination requires 12 power. ")
+	if requires_charges and choice ~= 0 and item.charges < req_power_location and not on_warpgate then
+		message("Insufficient charge. Teleportation to a memorized non-warpgate destination requires %d power.", req_power_location)
 		return
 	end
 
-	local slot_id = "slot"
-	
+	local slot_id
 	if choice == 0 then
 		slot_id = "gate"
 	else
-		slot_id = slot_id..tostring( math.floor( choice ) )
+		slot_id = "slot"..tostring( math.floor( choice ) )
 	end
 	
-	if item:get_var(slot_id.."_name", "null") == "null" then
-		message("The selected warp destination is unregistered.")
+	if not item:has_var(slot_id.."_name") then
+		message("The selected warp destination is not registered.")
 		return
 	end
 
@@ -322,17 +281,17 @@ function iuse_trs_translocator(item, active)
 
 	message("The fabric of the world shifts like loose cloth, and when it gradually returns to focus, you're somewhere else.")
 	
-	if choice == 0 or ter_str_id == "t_TRS_stabilized_portal" then
-		item.charges = item.charges - 6
+	if choice == 0 or on_warpgate then
+		item.charges = item.charges - req_power_gate
 	else
-        item.charges = item.charges - 12
+        item.charges = item.charges - req_power_location
 	end
 	
-	if game.one_in(10) and enable_penalty then
+	if enable_penalty and game.one_in(10) then
 		if choice == 0 then
 			return
 		end
-        if ter_str_id == "t_TRS_stabilized_portal" and game.one_in(2) then
+        if on_warpgate and game.one_in(2) then
             return
         end
 		
